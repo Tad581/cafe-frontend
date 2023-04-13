@@ -1,49 +1,52 @@
-import { SnackbarService } from './../services/snackbar.service';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserService } from '../services/user.service';
 import { MatDialogRef } from '@angular/material/dialog';
-import { GlobalConstants } from '../shared/global-constant';
+import { SnackbarService } from '../services/snackbar.service';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
+import { GlobalConstants } from '../shared/global-constant';
+import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-forgot-password',
-  templateUrl: './forgot-password.component.html',
-  styleUrls: ['./forgot-password.component.scss'],
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss'],
 })
-export class ForgotPasswordComponent implements OnInit {
-  forgotPasswordForm: any = FormGroup;
+export class LoginComponent implements OnInit {
+  loginForm: any = FormGroup;
   responseMessage: any;
-
   constructor(
     private formBuilder: FormBuilder,
     private userService: UserService,
-    private dialogRef: MatDialogRef<ForgotPasswordComponent>,
+    private dialogRef: MatDialogRef<LoginComponent>,
     private snackbarService: SnackbarService,
-    private ngxService: NgxUiLoaderService
+    private ngxService: NgxUiLoaderService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.forgotPasswordForm = this.formBuilder.group({
+    this.loginForm = this.formBuilder.group({
       email: [
         null,
         [Validators.required, Validators.pattern(GlobalConstants.emailRegex)],
       ],
+      password: ['', Validators.required],
     });
   }
 
   handleSubmit() {
     this.ngxService.start();
-    let formData = this.forgotPasswordForm.value;
+    let formData = this.loginForm.value;
     let data = {
       email: formData.email,
+      password: formData.password,
     };
-    this.userService.forgotPassword(data).subscribe(
+    this.userService.login(data).subscribe(
       (response: any) => {
         this.ngxService.stop();
-        this.responseMessage = response?.message;
         this.dialogRef.close();
-        this.snackbarService.openSnackbar(this.responseMessage, '');
+        localStorage.setItem('token', response.token);
+        this.router.navigate(['/cafe/dashboard']);
       },
       (error: any) => {
         this.ngxService.stop();

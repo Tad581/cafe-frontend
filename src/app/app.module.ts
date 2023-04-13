@@ -23,6 +23,7 @@ import {
   PB_DIRECTION,
 } from 'ngx-ui-loader';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { LoginComponent } from './login/login.component';
 
 const ngxUiLoaderConfig: NgxUiLoaderConfig = {
   text: 'Loading',
@@ -46,6 +47,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     AppSidebarComponent,
     SignupComponent,
     ForgotPasswordComponent,
+    LoginComponent,
   ],
   imports: [
     BrowserModule,
