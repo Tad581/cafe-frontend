@@ -21,9 +21,13 @@ export class UserService {
     });
   }
 
-  login(data:any) {
+  login(data: any) {
     return this.httpClient.post(`${this.url}/user/login`, data, {
       headers: new HttpHeaders().set('Content-Type', 'application/json'),
     });
+  }
+
+  checkToken() {
+    return this.httpClient.get(`${this.url}/user/checkToken`);
   }
 }
